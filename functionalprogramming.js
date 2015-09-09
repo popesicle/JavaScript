@@ -29,10 +29,12 @@ function reduce(array, callback){
 
     var total = array[0]
 
-    for(var i = 0; i < array.length; i ++){
-        total = callback(array[i], total)
-    }   
-    return(total)
+  
+  forEach(array, function(element){
+      total = callback(element,total)
+  })
+  return total
+
 }
 
 // tests
