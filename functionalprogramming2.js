@@ -1,92 +1,128 @@
-function sum(){
+// using our own forEach(), map(), reduce(), and filter()
+// functions written in js-functions-functional-practice-1
 
-    var inputs = Array.prototype.slice.call(arguments)
+
+// -----------
+// Write a function pluck() that extracts a list of
+// values associated with property names.
+// -----------
+function pluck(list, propertyName) {
+    // YOUR CODE HERE
+    var newarray= []
     
-    var result = 0
-    inputs.forEach(
-        function(value){
-            result += value
-        }
-    )
-    return result
+    list.forEach(function(obj){
+        newarray.push(obj[propertyName])
+    })
+
+    return(newarray)
 }
 
 // tests
 // ---
+var stooges = [{name: 'moe', age: 40}, {name: 'larry', age: 50}, {name: 'curly', age: 60}]
+console.assert(pluck(stooges, 'name')[0] === 'moe')
+console.assert(pluck(stooges, 'age')[2] === 60)
 
-console.assert(sum(1, 2, 3) === 6)
-console.assert(sum(1, 2, 3, 4) === 10)
-console.assert(sum(1, 2, 3, 4, 5) === 15)
-
-// ----------------------------
-// using Array.sort(), sort the following array
-// of people by name
-// ----------------------------
-
-var people = [
-    {name:"Matt", alma_mater:"Univ of Texas - Austin"},
-    {name:"Brian", alma_mater:"Texas A&M"},
-    {name:"Jesse", alma_mater:"Univ of Texas - Austin"},
-    {name:"Justin", alma_mater:"Univ of Florida"}
-]
-
-people.sort(function(a, b){
+// -----------
+// Write a function reject() that does the opposite of filter,
+// if the callback function returns a "truthy" value then that
+// item is **not** inserted into the new collection,
+// otherwise it is.
+// -----------
+function reject(list, predicate) {
     // YOUR CODE HERE
-    if ( a.name > b.name){
-        return 1
+    var filterCallback = function(num){
+        if(!predicate(num)) return true
     }
-    if ( a.name < b.name){
-        return -1
-    }
-    return 0    
-})
+    
+    var filtered = list.filter(filterCallback)
+    
+    
+    return(filtered)
+
+}
 
 // tests
 // ---
-console.assert(people[0].name === "Brian")
-console.assert(people[1].name === "Jesse")
-console.assert(people[2].name === "Justin")
+var lt10 = [0,1,2,3,4,5,6,7,8,9,10]
+var odds = reject(lt10, function(n){ return n%2 === 0 })
+console.assert(odds[0] === 1)
+console.assert(odds[1] === 3)
+console.assert(odds[4] === 9)
 
-// ----------------------------
-// Using Array.map(), Array.filter(), and Array.sort() on the
-// array below:
-// - filter for customers whose first-names start with 'J',
-// - map to their fullnames,
-// - and then sort the items alphabetically by fullname
-// ----------------------------
-
-var customers = [
-    { first: 'Joe', last: 'Blogs'},
-    { first: 'John', last: 'Smith'},
-    { first: 'Dave', last: 'Jones'},
-    { first: 'Jack', last: 'White'}
+// -----------
+// Write a function find() that returns the very first item
+// in a collection when the callback function returns true;
+// otherwise returns undefined.
+// -----------
+function find(list, predicate) {
+    // YOUR CODE HERE 
+    var newObject = {}
+    var forEachCallBack = function(obj){
+        if(predicate(obj)){
+           newObject = obj
+        }
+    }
+    list.forEach(forEachCallBack)
+    return(newObject)
+}
+// tests
+// ---
+var people = [
+    {name: "Justin", teaches: "JS"},
+    {name: "Jwo", teaches: "Ruby"},
+    {name: "Dorton", teaches: "life"}
 ]
 
-var results = customers
-    .filter(function(a){
-        // YOUR CODE HERE
-        if(a.first[0] === "J"){
-        return (a)    
-    }
-    })
-    .map(function(a){
-        var name = {}
-        name["fullname"] = a.first + " " + a.last
-        return(name)
-    })
-    .sort(function(a,b){
-        
-    if ( a.fullname > b.fullname){
-        return 1
-    }
-    if ( a.fullname < b.fullname){
-        return -1
-    }
-    return 0   
+var JS = find(people, function(n){ return n.teaches === "JS" })
+console.assert(JS.name === "Justin")
 
-    })
+// -----------
+// Write a function where() that filters for all the values
+// in the properties object.
+// -----------
+function where(list, properties) {
+    // YOUR CODE HERE
+    
+    var newArray = list.filter(function(Obj) {
+        // The above runs a filter on the list using the value of Object
+        for( var value in properties) {
+            // runs a loop on each value of "properties" to check against
+            // the if statement below
+            if( properties[value] !== Obj[value])
+                // checks to see if the value of properties does not match the 
+                // value of the object being searched for, if it does not match, 
+                // it will return false, removing it from the array.
+            return false
+        }
+        return true
+    })    
+    return(newArray)
+
+}
 
 // tests
 // ---
-console.assert(results[0].fullname === "Jack White")
-console.assert(results[2].fullname === "John Smith")
+var plays = [
+    {title: "Cymbeline", author: "Shakespeare", year: 1623},
+    {title: "The Tempest", author: "Shakespeare", year: 1623},
+    {title: "Hamlet", author: "Shakespeare", year: 1603},
+    {title: "A Midsummer Night's Dream", author: "Shakespeare", year: 1600},
+    {title: "Macbeth", author: "Shakespeare", year: 1620},
+    {title: "Death of a Salesman", author: "Arthur Miller", year: 1949},
+    {title: "Two Blind Mice", author: "Samuel and Bella Spewack", year: 1949}
+]
+
+var sh8spr = where(plays, {author: "Shakespeare"})
+console.assert(sh8spr instanceof Array)
+console.assert(sh8spr.length === 5)
+console.assert(sh8spr[0].title === "Cymbeline")
+
+sh8spr = where(plays, {author: "Shakespeare", year: 1611})
+console.assert(sh8spr.length === 0)
+
+sh8spr = where(plays, {author: "Shakespeare", year: 1623})
+console.assert(sh8spr.length === 2)
+
+var midcentury = where(plays, {year: 1949})
+console.assert(midcentury.length === 2)
