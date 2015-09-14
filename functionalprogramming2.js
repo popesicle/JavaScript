@@ -86,14 +86,13 @@ function where(list, properties) {
     
     var newArray = list.filter(function(Obj) {
         // The above runs a filter on the list using the value of Object
-        for( var value in properties) {
-            // runs a loop on each value of "properties" to check against
+        for( var key in properties) {
+            // runs a loop on each key of "properties" to check against
             // the if statement below
-            if( properties[value] !== Obj[value])
-                // checks to see if the value of properties does not match the 
-                // value of the object being searched for, if it does not match, 
+            if( properties[key] !== Obj[key]) return false
+                // checks to see if the key of properties does not match the 
+                // key of the object being searched for, if it does not match, 
                 // it will return false, removing it from the array.
-            return false
         }
         return true
     })    
