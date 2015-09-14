@@ -58,12 +58,12 @@ console.assert(odds[4] === 9)
 function find(list, predicate) {
     // YOUR CODE HERE 
     var newObject = {}
-    var forEachCallBack = function(obj){
+    var forEachfunction = function(obj){
         if(predicate(obj)){
            newObject = obj
         }
     }
-    list.forEach(forEachCallBack)
+    list.forEach(forEachfunction)
     return(newObject)
 }
 // tests
@@ -98,7 +98,7 @@ function where(list, properties) {
         return true
     })    
     return(newArray)
-
+    
 }
 
 // tests
